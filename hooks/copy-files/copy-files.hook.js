@@ -48,10 +48,11 @@ module.exports = {
     // Copy files to outDir
     for (const file of includedFiles) {
       const outFile = outDir ? file.replace(rootRegex, outDir) : file;
-      if (fs.lstatSync(file).isDirectory()) {
+      const inFile = cwd ? file.replace(rootRegex,cwd) : file;
+      if (fs.lstatSync(inFile).isDirectory()) {
         fs.mkdirSync(outFile, { recursive: true });
-      } else if (!file.endsWith('js') || !((file.endsWith('ts') || file.endsWith('tsx')) && !api.tsconfig?.compilerOptions?.allowTs)) {
-        fs.copyFileSync(file, outFile);
+      } else if (!file.endsWith('js') && !((inFile.endsWith('ts') || inFile.endsWith('tsx')) && !api.tsconfig?.compilerOptions?.allowTs)) {
+        fs.copyFileSync(inFile, outFile);
       }
     }
   }
